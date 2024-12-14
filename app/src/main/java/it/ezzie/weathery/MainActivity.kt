@@ -33,6 +33,8 @@ import it.ezzie.weathery.ui.theme.GreyBorder
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.WeatheryTheme
 import it.ezzie.weathery.ui.theme.White
+import it.ezzie.weathery.view.HeadingUI
+import it.ezzie.weathery.view.MainTemperatureUI
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +42,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatheryTheme {
-
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = DarkNavyBlue)
+                ){
+                    HeadingUI()
+                    MainTemperatureUI()
+                }
             }
         }
     }
 }
 
+
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true)
+fun PreviewWeather(){
+
+}
 
