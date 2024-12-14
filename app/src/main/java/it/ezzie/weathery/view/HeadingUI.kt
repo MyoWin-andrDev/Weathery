@@ -77,7 +77,7 @@ fun HeadingUI() {
                 contentDescription = null,
                 modifier = Modifier
                     .size(40.dp)
-                    .background(color = DarkerNavyBlue, RoundedCornerShape(8.dp))
+                    .background(color = DarkNavyBlue, RoundedCornerShape(8.dp))
                     .padding(8.dp),
                 colorFilter = ColorFilter.tint(color = Silver)
             )
