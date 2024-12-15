@@ -48,6 +48,7 @@ android {
         }
     }
 }
+val ktor_version: String by project
 
 dependencies {
 
@@ -66,13 +67,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    // retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    // GSON
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    // coroutine
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-
-
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
 }
