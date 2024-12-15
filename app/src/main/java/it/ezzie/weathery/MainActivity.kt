@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import it.ezzie.weathery.model.Hourly
 import it.ezzie.weathery.model.WeatherData
 import it.ezzie.weathery.networkAPI.NetworkClient
 import it.ezzie.weathery.ui.theme.DarkNavyBlue
@@ -54,8 +55,10 @@ import it.ezzie.weathery.view.SunriseSunset
 import it.ezzie.weathery.view.TodayDetailUI
 import it.ezzie.weathery.view.WeatherDetail
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -102,7 +105,7 @@ fun WeatherScreen(){
                     modifier = Modifier.padding(start = 24.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                HourlyWeatherUI()
+                HourlyWeatherUI(data.hourly, data.hourly_units)
                 SevenDayWeatherUI()
                 WeatherDetail()
                 SunriseSunset()
@@ -111,8 +114,25 @@ fun WeatherScreen(){
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun HourlyWeatherRow(hourly: Hourly){
+    LazyRow(){
+        items(hourly.temperature_2m.size){index ->
+            //Hour Formatting
+            val hour = hourly.time[index].substringAfter("T")
+            val formatter = DateTimeFormatter.ofPattern("hha")
+            val formattedHour = hour.format(formatter).uppercase()
+            //WeatherCode To Icon
+            val icon : Int = WeatherCondition().codeToIcon(hourly.weather_code[index])
+            //Temperature
+            val temperature
+        }
+    }
+}
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun PreviewWeather(){
