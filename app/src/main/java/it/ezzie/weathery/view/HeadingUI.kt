@@ -1,5 +1,7 @@
 package it.ezzie.weathery.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -31,10 +33,12 @@ import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.GreyBorder
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun HeadingUI() {
+fun HeadingUI(dateString : String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,8 +67,9 @@ fun HeadingUI() {
                 }
                 //Date Typo
                 Spacer(modifier = Modifier.height(8.dp))
+                val today = DateFormatter(dateString.substringBefore("T"))
                 Text(
-                    text = "14 December, Saturday",
+                    text = today as String,
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.lato_regular)),
                     color = Silver
@@ -83,3 +88,10 @@ fun HeadingUI() {
             )
         }
     }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun DateFormatter(dateString : String) : String {
+    val date = LocalDate.parse(dateString)
+    val formatter = DateTimeFormatter.ofPattern("d MMMM, EEEE")
+    return date.format(formatter)
+}
