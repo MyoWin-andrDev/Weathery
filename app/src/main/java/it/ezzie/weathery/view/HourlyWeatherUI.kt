@@ -32,7 +32,7 @@ import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
 @Composable
-fun HourlyWeatherUI(hourlyTime : String, weatherCondition : Int, temperature : String, hourlyUnits: HourlyUnits){
+fun HourlyWeatherUI(hourlyTime : String, weatherCondition : Int, temperature : String){
     Box(
         modifier = Modifier
             .padding(5.dp)

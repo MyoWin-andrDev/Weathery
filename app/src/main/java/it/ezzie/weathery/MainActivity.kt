@@ -7,8 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +51,7 @@ import it.ezzie.weathery.view.SunriseSunset
 import it.ezzie.weathery.view.TodayDetailUI
 import it.ezzie.weathery.view.WeatherDetail
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -100,7 +103,7 @@ fun WeatherScreen(){
                     modifier = Modifier.padding(start = 24.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                HourlyWeatherRow(data.hourly, data.hourly_units)
+                HourlyWeatherRow(data.hourly)
                 SevenDayWeatherUI()
                 WeatherDetail()
                 SunriseSunset()
@@ -111,25 +114,34 @@ fun WeatherScreen(){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HourlyWeatherRow(hourly: Hourly, hourlyUnits: HourlyUnits){
-//    val today = weatherData.current_weather.time
-//    val sevenDaysList = weatherData.hourly.time
-//    val (currentHourIndex , remainingTimeList) = CurrentHourIndex().getToday(today, sevenDaysList)
-    LazyRow(
+fun HourlyWeatherRow(hourly: Hourly){
+    val currentHourIndex = CurrentHourIndex().getCurrentHour(hourly.time[0].substringBefore("T"))
+    Row(
         modifier = Modifier
             .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
     ){
-        items(24){index ->
-            //Formatting Hour (01:00) to (1AM)
-            val hour = LocalTime.parse(hourly.time[index].substringAfter("T"))
-            val formatter = DateTimeFormatter.ofPattern("ha")
-            val formattedHour = hour.format(formatter).uppercase()
+        hourly.time.subList(currentHourIndex!!,25).forEachIndexed { index , currentHour ->
+            val formattedHour : String?
+            if(currentHourIndex == LocalDateTime.now().hour){
+               formattedHour = "Today"
+            }
+            else if(currentHourIndex + index == 24){
+                formattedHour = "Tomorrow"
+            }
+            else {
+                //Formatting Hour (01:00) to (1AM)
+                val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
+                val formatter = DateTimeFormatter.ofPattern("ha")
+                formattedHour = hour.format(formatter).uppercase()
+            }
+
             //WeatherCode To Icon
-            val icon : Int = WeatherCondition().codeToIcon(hourly.weather_code[index])
+            val icon : Int = WeatherCondition().codeToIcon(hourly.weather_code[currentHourIndex + index])
             //Temperature
-            val temperature = hourly.temperature_2m[index]
+            val temperature = hourly.temperature_2m[currentHourIndex + index]
             val formattedTemperature = Math.round(temperature).toString() + "\u00B0"
-            HourlyWeatherUI(formattedHour, icon, formattedTemperature, hourlyUnits)
+            HourlyWeatherUI(formattedHour, icon, formattedTemperature)
         }
     }
 }
