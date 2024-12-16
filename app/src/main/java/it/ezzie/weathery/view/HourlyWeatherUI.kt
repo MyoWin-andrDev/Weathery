@@ -32,9 +32,10 @@ import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
 @Composable
-fun HourlyWeatherUI(hourly: Hourly, hourlyUnits: HourlyUnits){
+fun HourlyWeatherUI(hourlyTime : String, weatherCondition : Int, temperature : String, hourlyUnits: HourlyUnits){
     Box(
         modifier = Modifier
+            .padding(5.dp)
             .background(color = DarkNavyBlue, RoundedCornerShape(10.dp))
 //            .border(1.dp,color = GreyBorder, RoundedCornerShape(10.dp))
 
@@ -45,7 +46,7 @@ fun HourlyWeatherUI(hourly: Hourly, hourlyUnits: HourlyUnits){
         ) {
             //Hourly Time
             Text(
-                text = "10AM",
+                text = hourlyTime,
                 fontSize = 14.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 color = Silver,
@@ -53,7 +54,7 @@ fun HourlyWeatherUI(hourly: Hourly, hourlyUnits: HourlyUnits){
             )
             Spacer(modifier = Modifier.height(5.dp))
             Image(
-                painter = painterResource(id = R.drawable.sunny),
+                painter = painterResource(id = weatherCondition),
                 contentDescription = null,
                 modifier = Modifier
                     .size(32.dp)
@@ -62,7 +63,7 @@ fun HourlyWeatherUI(hourly: Hourly, hourlyUnits: HourlyUnits){
 
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "16\u00B0",
+                text = temperature,
                 fontSize = 14.sp,
                 color = White,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),

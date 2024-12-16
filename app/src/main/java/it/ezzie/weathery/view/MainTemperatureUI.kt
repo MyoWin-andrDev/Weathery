@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
-import it.ezzie.weathery.WeatherCondition
+import it.ezzie.weathery.dataReturn.WeatherCondition
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
