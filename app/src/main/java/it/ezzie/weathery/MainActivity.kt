@@ -43,6 +43,7 @@ import it.ezzie.weathery.networkAPI.NetworkClient
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.WeatheryTheme
 import it.ezzie.weathery.ui.theme.White
+import it.ezzie.weathery.ui.theme.Yellow
 import it.ezzie.weathery.view.HeadingUI
 import it.ezzie.weathery.view.HourlyWeatherUI
 import it.ezzie.weathery.view.MainTemperatureUI
@@ -92,20 +93,17 @@ fun WeatherScreen(){
                     .background(color = DarkerNavyBlue)
                     .verticalScroll(rememberScrollState())
             ){
-                HeadingUI(data.current_weather.time)
-                MainTemperatureUI(data.current_weather.temperature , data.current_weather.weathercode)
-                TodayDetailUI()
-                Text(
-                    text = "Today",
-                    fontSize = 20.sp,
-                    color = White,
-                    fontFamily = FontFamily(Font(R.font.lato_regular)),
-                    fontWeight = FontWeight(700),
-                    modifier = Modifier.padding(start = 24.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                HeadingUI(data.current.time)
+                MainTemperatureUI(data.current.temperature_2m , data.current.weather_code)
+                TodayDetailUI(data.current, data.current_units)
+                Title(text = "Today")
+                Spacer(modifier = Modifier.height(8.dp))
                 HourlyWeatherRow(data.hourly)
+                Title(text = "Next 7 days")
+                Spacer(modifier = Modifier.height(8.dp))
                 SevenDayWeatherColumn(data.daily)
+                Title(text = "Weather details")
+                Spacer(modifier = Modifier.height(8.dp))
                 WeatherDetail()
                 SunriseSunset()
             }
@@ -121,6 +119,7 @@ fun HourlyWeatherRow(hourly: Hourly){
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
+            .padding(bottom = 16.dp)
     ){
         hourly.time.subList(currentHourIndex!!,25).forEachIndexed { index , currentHour ->
             val formattedHour : String?
@@ -128,7 +127,7 @@ fun HourlyWeatherRow(hourly: Hourly){
             val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
             val formatter = DateTimeFormatter.ofPattern("ha")
             formattedHour = if(currentHourIndex + index == 24){
-                "Tomorrow"
+                "TMR"
             } else{
                 hour.format(formatter).uppercase()
             }
@@ -157,6 +156,18 @@ fun SevenDayWeatherColumn(daily : Daily){
             SevenDayWeatherUI(timeStamp, weatherIcon, weatherCode, minTemperature, maxTemperature)
         }
     }
+}
+
+@Composable
+fun Title(text : String){
+    Text(
+        text = text,
+        fontSize = 18.sp,
+        color = Yellow,
+        fontFamily = FontFamily(Font(R.font.lato_regular)),
+        fontWeight = FontWeight(700),
+        modifier = Modifier.padding(start = 24.dp)
+    )
 }
 
 

@@ -34,7 +34,7 @@ fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String, mi
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 24.dp, top = 16.dp, bottom = 16.dp, end = 24.dp)
+            .padding(start = 24.dp, top = 16.dp, bottom = 24.dp, end = 24.dp)
             .background(color = DarkerNavyBlue),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -81,6 +81,6 @@ fun DateToDayOfWeek(date : String) : String {
         "Today"
     }
     else{
-        sevenDays.toString().lowercase().capitalize()
+        sevenDays.toString().substring(0,3).lowercase().capitalize()
     }
 }

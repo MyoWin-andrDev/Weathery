@@ -8,8 +8,8 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
-import it.ezzie.weathery.model.CurrentWeather
-import it.ezzie.weathery.model.CurrentWeatherUnits
+import it.ezzie.weathery.model.Current
+import it.ezzie.weathery.model.CurrentUnits
 import it.ezzie.weathery.model.Daily
 import it.ezzie.weathery.model.DailyUnits
 import it.ezzie.weathery.model.Hourly
@@ -39,10 +39,10 @@ class NetworkClient{
     }
 
     suspend fun getWeatherInfo(latitude : Double, longitude : Double) : WeatherData {
-        val response : HttpResponse = client.get("https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,is_day,rain,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,uv_index_clear_sky_max&current_weather=true")
+        val response : HttpResponse = client.get("https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m,weather_code,pressure_msl,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,sunrise,sunset,sunshine_duration,uv_index_max,uv_index_clear_sky_max,wind_speed_10m_max,wind_direction_10m_dominant")
         val jsonResponse = response.body<JsonObject>()
-        val currentWeather = jsonResponse["current_weather"]!!.jsonObject
-        val currentWeatherUnits = jsonResponse["current_weather_units"]!!.jsonObject
+        val current = jsonResponse["current"]!!.jsonObject
+        val currentUnits = jsonResponse["current_units"]!!.jsonObject
         val daily = jsonResponse["daily"]!!.jsonObject
         val dailyUnits = jsonResponse["daily_units"]!!.jsonObject
         val elevation = jsonResponse["elevation"]!!.jsonPrimitive.double
@@ -55,26 +55,32 @@ class NetworkClient{
         val timezoneAbbreviation = jsonResponse["timezone_abbreviation"]!!.jsonPrimitive.content
         val utcOffsetSeconds = jsonResponse["utc_offset_seconds"]!!.jsonPrimitive.int
         return WeatherData(
-            CurrentWeather(
-                interval = currentWeather["interval"]!!.jsonPrimitive.int,
-                is_day = currentWeather["is_day"]!!.jsonPrimitive.int,
-                temperature = currentWeather["temperature"]!!.jsonPrimitive.double,
-                time = currentWeather["time"]!!.jsonPrimitive.content,
-                weathercode = currentWeather["weathercode"]!!.jsonPrimitive.int,
-                winddirection = currentWeather["winddirection"]!!.jsonPrimitive.int,
-                windspeed = currentWeather["windspeed"]!!.jsonPrimitive.double
+            Current(
+                interval = current["interval"]!!.jsonPrimitive.int,
+                is_day = current["is_day"]!!.jsonPrimitive.int,
+                precipitation = current["precipitation"]!!.jsonPrimitive.double,
+                rain = current["rain"]!!.jsonPrimitive.double,
+                relative_humidity_2m = current["relative_humidity_2m"]!!.jsonPrimitive.int,
+                temperature_2m = current["temperature_2m"]!!.jsonPrimitive.double,
+                time = current["time"]!!.jsonPrimitive.content,
+                weather_code = current["weather_code"]!!.jsonPrimitive.int,
+                wind_direction_10m = current["wind_direction_10m"]!!.jsonPrimitive.int,
+                wind_speed_10m = current["wind_speed_10m"]!!.jsonPrimitive.double
             ),
-            CurrentWeatherUnits(
-                interval = currentWeatherUnits["interval"]!!.jsonPrimitive.content,
-                is_day = currentWeatherUnits["is_day"]!!.jsonPrimitive.content,
-                temperature = currentWeatherUnits["temperature"]!!.jsonPrimitive.content,
-                time = currentWeatherUnits["time"]!!.jsonPrimitive.content,
-                weathercode = currentWeatherUnits["weathercode"]!!.jsonPrimitive.content,
-                winddirection = currentWeatherUnits["winddirection"]!!.jsonPrimitive.content,
-                windspeed = currentWeatherUnits["windspeed"]!!.jsonPrimitive.content
+            CurrentUnits(
+                interval = currentUnits["interval"]!!.jsonPrimitive.content,
+                is_day = currentUnits["is_day"]!!.jsonPrimitive.content,
+                precipitation = currentUnits["precipitation"]!!.jsonPrimitive.content,
+                rain = currentUnits["rain"]!!.jsonPrimitive.content,
+                relative_humidity_2m = currentUnits["relative_humidity_2m"]!!.jsonPrimitive.content,
+                temperature_2m = currentUnits["temperature_2m"]!!.jsonPrimitive.content,
+                time = currentUnits["time"]!!.jsonPrimitive.content,
+                weather_code = currentUnits["weather_code"]!!.jsonPrimitive.content,
+                wind_direction_10m = currentUnits["wind_direction_10m"]!!.jsonPrimitive.content,
+                wind_speed_10m = currentUnits["wind_speed_10m"]!!.jsonPrimitive.content
             ),
             Daily(
-                apparent_temperature_max = daily["apparent_temperature_max"]!!.jsonArray.map{ it.jsonPrimitive.double},
+                apparent_temperature_max = daily["apparent_temperature_max"]!!.jsonArray.map { it.jsonPrimitive.double },
                 sunrise = daily["sunrise"]!!.jsonArray.map { it.jsonPrimitive.content },
                 sunset = daily["sunset"]!!.jsonArray.map { it.jsonPrimitive.content },
                 sunshine_duration = daily["sunshine_duration"]!!.jsonArray.map{ it.jsonPrimitive.double},

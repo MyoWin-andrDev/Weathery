@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
+import it.ezzie.weathery.model.Current
+import it.ezzie.weathery.model.CurrentUnits
 import it.ezzie.weathery.ui.theme.DarkNavyBlue
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.GreyBorder
@@ -33,8 +35,7 @@ import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun TodayDetailUI(){
+fun TodayDetailUI(current: Current, currentUnits: CurrentUnits){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,7 +56,10 @@ fun TodayDetailUI(){
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "10m/s",
+                text = """
+                    ${current.wind_speed_10m}
+                    ${currentUnits.wind_speed_10m}
+                """.trimIndent(),
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 color = White,
@@ -82,7 +86,10 @@ fun TodayDetailUI(){
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "98%",
+                text = """
+                    ${current.relative_humidity_2m}
+                    pct
+                """.trimIndent(),
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 color = White,
@@ -110,7 +117,10 @@ fun TodayDetailUI(){
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "100%",
+                text = """
+                    ${current.rain}
+                    ${currentUnits.rain}
+                """.trimIndent(),
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 color = White,
