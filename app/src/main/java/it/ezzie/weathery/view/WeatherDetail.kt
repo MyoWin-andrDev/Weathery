@@ -24,13 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
+import it.ezzie.weathery.model.WeatherData
 import it.ezzie.weathery.ui.theme.DarkNavyBlue
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun WeatherDetail(){
+fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, windSpeed : Double, humidity : Int, uxIndex : Double, visibility : Double, airPressure : Double, weatherData: WeatherData){
     Column{
         Row(
             modifier = Modifier
@@ -60,11 +60,13 @@ fun WeatherDetail(){
                     fontSize = 14.sp,
                     color = Silver,
                     fontFamily = FontFamily(Font(R.font.lato_regular)),
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "29",
+                    text = "${Math.round(apparentTemperature)} ${weatherData.daily_units.apparent_temperature_max}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -72,7 +74,7 @@ fun WeatherDetail(){
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            //NE Wind
+            //Wind Direction
             Column(
                 modifier = Modifier
                     .width(160.dp)
@@ -90,15 +92,17 @@ fun WeatherDetail(){
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "NE Wind",
+                    text = windCompassDirection + " Wind",
                     fontSize = 14.sp,
                     color = Silver,
                     fontFamily = FontFamily(Font(R.font.lato_regular)),
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "8 mi/h",
+                    text ="${windSpeed} ${weatherData.daily_units.wind_speed_10m_max}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -106,7 +110,7 @@ fun WeatherDetail(){
                 )
             }
         }
-        //Second Roll
+        //Second Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,11 +138,13 @@ fun WeatherDetail(){
                     fontSize = 14.sp,
                     color = Silver,
                     fontFamily = FontFamily(Font(R.font.lato_regular)),
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "61 %",
+                    text = "${humidity} ${weatherData.hourly_units.relative_humidity_2m}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -146,7 +152,7 @@ fun WeatherDetail(){
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            //NE Wind
+            //UV Index
             Column(
                 modifier = Modifier
                     .width(160.dp)
@@ -168,11 +174,13 @@ fun WeatherDetail(){
                     text = "UV",
                     fontSize = 14.sp,
                     color = Silver,
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "0",
+                    text = uxIndex.toString(),
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -180,7 +188,7 @@ fun WeatherDetail(){
                 )
             }
         }
-        //Third Roll
+        //Third Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -208,11 +216,13 @@ fun WeatherDetail(){
                     text = "Visibility",
                     fontSize = 14.sp,
                     color = Silver,
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "9 km",
+                    text = "${Math.round(visibility)} ${weatherData.hourly_units.visibility}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -220,7 +230,7 @@ fun WeatherDetail(){
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            //NE Wind
+            //Air Pressure
             Column(
                 modifier = Modifier
                     .width(160.dp)
@@ -242,11 +252,13 @@ fun WeatherDetail(){
                     text = "Air Pressure",
                     fontSize = 14.sp,
                     color = Silver,
-                    modifier = Modifier.align(Alignment.Start).padding(top = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "1013 Psa",
+                    text = "${Math.round(airPressure)} ${weatherData.hourly_units.pressure_msl}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,

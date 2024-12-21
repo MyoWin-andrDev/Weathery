@@ -2,6 +2,7 @@ package it.ezzie.weathery
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -48,6 +49,7 @@ import it.ezzie.weathery.view.MainTemperatureUI
 import it.ezzie.weathery.view.SevenDayWeatherUI
 import it.ezzie.weathery.view.SunriseSunset
 import it.ezzie.weathery.view.TodayDetailUI
+import it.ezzie.weathery.view.WeatherDetail
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -177,7 +179,7 @@ fun Title(text : String){
 fun WeatherDetailBox(weatherData: WeatherData){
     val currentHourIndex = CurrentHourIndex().getCurrentHour(weatherData.hourly.time[0])
     weatherData.hourly.time.subList(currentHourIndex!!,24).forEachIndexed { index, currentHour ->
-        val apparentTemperature = weatherData.daily.apparent_temperature_max[currentHourIndex + index]
+        val apparentTemperature = weatherData.daily.apparent_temperature_max[0]
         //Getting Compass Direction
         fun getCompassDirection(degrees: Int): String {
             val directions = arrayOf(
@@ -187,11 +189,14 @@ fun WeatherDetailBox(weatherData: WeatherData){
             val arrayIndex = ((degrees + 11.25) / 22.5) % 16 // Calculate index
             return directions[arrayIndex.toInt()]
         }
-        val windDegreeDirection = weatherData.daily.wind_direction_10m_dominant[currentHourIndex + index]
+        val windDegreeDirection = weatherData.daily.wind_direction_10m_dominant[0]
         val windCompassDirection = getCompassDirection(windDegreeDirection)
-        val windSpeed = weatherData.daily.wind_speed_10m_max
+        val windSpeed = weatherData.daily.wind_speed_10m_max[0]
         val humidity = weatherData.hourly.relative_humidity_2m[currentHourIndex + index]
-        val uxIndex = weatherData.daily.uv_index_max
+        val uxIndex = weatherData.daily.uv_index_max[0]
+        val visibility = weatherData.hourly.visibility[currentHourIndex + index]
+        val airPressure = weatherData.hourly.pressure_msl[currentHourIndex + index]
+        WeatherDetail(apparentTemperature, windCompassDirection, windSpeed, humidity, uxIndex, visibility, airPressure, weatherData)
     }
 }
 
