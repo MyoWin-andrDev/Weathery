@@ -2,7 +2,6 @@ package it.ezzie.weathery
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,7 +41,6 @@ import it.ezzie.weathery.model.WeatherData
 import it.ezzie.weathery.networkAPI.NetworkClient
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.WeatheryTheme
-import it.ezzie.weathery.ui.theme.White
 import it.ezzie.weathery.ui.theme.Yellow
 import it.ezzie.weathery.view.HeadingUI
 import it.ezzie.weathery.view.HourlyWeatherUI
@@ -50,9 +48,7 @@ import it.ezzie.weathery.view.MainTemperatureUI
 import it.ezzie.weathery.view.SevenDayWeatherUI
 import it.ezzie.weathery.view.SunriseSunset
 import it.ezzie.weathery.view.TodayDetailUI
-import it.ezzie.weathery.view.WeatherDetail
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -79,6 +75,7 @@ fun WeatherScreen(){
         mutableStateOf <WeatherData?>(null)
     }
 
+
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             weatherData = networkClient.getWeatherInfo(13.7563,100.5018)
@@ -86,6 +83,11 @@ fun WeatherScreen(){
     }
 
     weatherData?.let { data ->
+        //Getting Current Hour
+        val hour = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("ha")
+        val currentHour = hour.format(formatter).uppercase()
+
         Box{
             Column(
                 modifier = Modifier
@@ -102,9 +104,9 @@ fun WeatherScreen(){
                 Title(text = "Next 7 days")
                 Spacer(modifier = Modifier.height(8.dp))
                 SevenDayWeatherColumn(data.daily)
-                Title(text = "Weather details")
+                Title(text = "$currentHour Weather details")
                 Spacer(modifier = Modifier.height(8.dp))
-                WeatherDetail()
+                WeatherDetailBox(data)
                 SunriseSunset()
             }
         }
@@ -170,6 +172,28 @@ fun Title(text : String){
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun WeatherDetailBox(weatherData: WeatherData){
+    val currentHourIndex = CurrentHourIndex().getCurrentHour(weatherData.hourly.time[0])
+    weatherData.hourly.time.subList(currentHourIndex!!,24).forEachIndexed { index, currentHour ->
+        val apparentTemperature = weatherData.daily.apparent_temperature_max[currentHourIndex + index]
+        //Getting Compass Direction
+        fun getCompassDirection(degrees: Int): String {
+            val directions = arrayOf(
+                "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+            )
+            val arrayIndex = ((degrees + 11.25) / 22.5) % 16 // Calculate index
+            return directions[arrayIndex.toInt()]
+        }
+        val windDegreeDirection = weatherData.daily.wind_direction_10m_dominant[currentHourIndex + index]
+        val windCompassDirection = getCompassDirection(windDegreeDirection)
+        val windSpeed = weatherData.daily.wind_speed_10m_max
+        val humidity = weatherData.hourly.relative_humidity_2m[currentHourIndex + index]
+        val uxIndex = weatherData.daily.uv_index_max
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
