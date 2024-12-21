@@ -5,9 +5,6 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainTemperatureUI">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="TodayDetailUI">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -16,8 +13,19 @@
       </SelectionState>
       <SelectionState runConfigName="WeatherDetail">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-12-21T15:49:10.319767062Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/phyo105438/.android/avd/Pixel_8_Pro_API_VanillaIceCream.avd" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="PreviewWeather">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="SunriseSunset">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

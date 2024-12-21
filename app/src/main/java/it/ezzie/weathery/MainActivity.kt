@@ -35,8 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.dataReturn.CurrentHourIndex
+import it.ezzie.weathery.dataReturn.TimeFormat
 import it.ezzie.weathery.dataReturn.WeatherCondition
 import it.ezzie.weathery.model.Daily
+import it.ezzie.weathery.model.DailyUnits
 import it.ezzie.weathery.model.Hourly
 import it.ezzie.weathery.model.WeatherData
 import it.ezzie.weathery.networkAPI.NetworkClient
@@ -97,7 +99,7 @@ fun WeatherScreen(){
                     .background(color = DarkerNavyBlue)
                     .verticalScroll(rememberScrollState())
             ){
-                HeadingUI(data.current.time)
+                HeadingUI()
                 MainTemperatureUI(data.current.temperature_2m , data.current.weather_code)
                 TodayDetailUI(data.current, data.current_units)
                 Title(text = "Today")
@@ -109,7 +111,7 @@ fun WeatherScreen(){
                 Title(text = "$currentHour Weather details")
                 Spacer(modifier = Modifier.height(8.dp))
                 WeatherDetailBox(data)
-                SunriseSunset()
+                SunDetail(data.daily)
             }
         }
     }
@@ -118,14 +120,14 @@ fun WeatherScreen(){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HourlyWeatherRow(hourly: Hourly){
-    val currentHourIndex = CurrentHourIndex().getCurrentHour(hourly.time[0].substringBefore("T"))
+    val currentHourIndex = CurrentHourIndex().getCurrentHour(LocalDateTime.now().toString().substringBefore("T"))
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
             .padding(bottom = 16.dp)
     ){
-        hourly.time.subList(currentHourIndex!!,25).forEachIndexed { index , currentHour ->
+        hourly.time.subList(currentHourIndex!!,25).forEachIndexed { index, _ ->
             val formattedHour : String?
             //Formatting Hour (01:00) to (1AM)
             val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
@@ -149,7 +151,9 @@ fun HourlyWeatherRow(hourly: Hourly){
 @Composable
 fun SevenDayWeatherColumn(daily : Daily){
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
     ){
         daily.time.forEachIndexed { index, timeStamp ->
             val weatherCondition = WeatherCondition()
@@ -177,8 +181,8 @@ fun Title(text : String){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherDetailBox(weatherData: WeatherData){
-    val currentHourIndex = CurrentHourIndex().getCurrentHour(weatherData.hourly.time[0])
-    weatherData.hourly.time.subList(currentHourIndex!!,24).forEachIndexed { index, currentHour ->
+    val currentHourIndex = CurrentHourIndex().getCurrentHour(LocalDateTime.now().toString())
+   if(currentHourIndex != null){
         val apparentTemperature = weatherData.daily.apparent_temperature_max[0]
         //Getting Compass Direction
         fun getCompassDirection(degrees: Int): String {
@@ -192,12 +196,23 @@ fun WeatherDetailBox(weatherData: WeatherData){
         val windDegreeDirection = weatherData.daily.wind_direction_10m_dominant[0]
         val windCompassDirection = getCompassDirection(windDegreeDirection)
         val windSpeed = weatherData.daily.wind_speed_10m_max[0]
-        val humidity = weatherData.hourly.relative_humidity_2m[currentHourIndex + index]
+        val humidity = weatherData.hourly.relative_humidity_2m[currentHourIndex]
         val uxIndex = weatherData.daily.uv_index_max[0]
-        val visibility = weatherData.hourly.visibility[currentHourIndex + index]
-        val airPressure = weatherData.hourly.pressure_msl[currentHourIndex + index]
+        val visibility = weatherData.hourly.visibility[currentHourIndex]
+        val airPressure = weatherData.hourly.pressure_msl[currentHourIndex]
         WeatherDetail(apparentTemperature, windCompassDirection, windSpeed, humidity, uxIndex, visibility, airPressure, weatherData)
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun SunDetail(daily: Daily){
+    val timeFormat = TimeFormat()
+    val sunrise = timeFormat.HourFormatter(daily.sunrise[0])
+    val sunset = timeFormat.HourFormatter(daily.sunset[0])
+    val duration = timeFormat.secondToHour(daily.sunshine_duration[0])
+    SunriseSunset(sunrise, sunset, duration)
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

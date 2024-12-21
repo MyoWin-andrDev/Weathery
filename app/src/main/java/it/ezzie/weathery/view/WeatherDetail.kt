@@ -114,7 +114,7 @@ fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, w
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp)
         ){
             //Humidity
             Column(

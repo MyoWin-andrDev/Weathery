@@ -34,11 +34,12 @@ import it.ezzie.weathery.ui.theme.GreyBorder
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HeadingUI(dateString : String) {
+fun HeadingUI() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -67,7 +68,7 @@ fun HeadingUI(dateString : String) {
                 }
                 //Date Typo
                 Spacer(modifier = Modifier.height(8.dp))
-                val today = DateFormatter(dateString.substringBefore("T"))
+                val today = DateFormatter(LocalDate.now().toString())
                 Text(
                     text = today as String,
                     fontSize = 14.sp,

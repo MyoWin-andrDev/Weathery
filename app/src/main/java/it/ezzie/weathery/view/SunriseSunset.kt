@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,18 +31,17 @@ import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun SunriseSunset(){
+fun SunriseSunset(sunrise : String, sunset : String, duration : String){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp)
             .background(color = DarkNavyBlue, RoundedCornerShape(10.dp))
     ){
         //Sunrise Column
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding( start = 8.dp, top = 16.dp, bottom = 16.dp, end = 8.dp )
         ){
             Image(
                 painter = painterResource(id = R.drawable.sunrise),
@@ -59,28 +60,43 @@ fun SunriseSunset(){
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "6:32 am",
+                text = sunrise,
                 fontSize = 16.sp,
                 color = White
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-
         //Sun Logo
         Column(
-            modifier = Modifier.padding(top = 48.dp)
+            modifier = Modifier.padding(top = 16.dp),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.sunny),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(50.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Sunshine Duration",
+                fontSize = 14.sp,
+                color = Silver,
+                fontFamily = FontFamily(Font(R.font.lato_regular)),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = duration,
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                color = White,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
         Spacer(modifier = Modifier.weight(1f))
         //Sunset Column
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(start = 8.dp, top = 16.dp, bottom = 16.dp, end = 8.dp)
         ){
             Image(
                 painter = painterResource(id = R.drawable.sunset),
@@ -92,14 +108,14 @@ fun SunriseSunset(){
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Sunrise",
+                text = "Sunset",
                 fontSize = 14.sp,
                 color = Silver,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "6:32 am",
+                text = sunset,
                 fontSize = 16.sp,
                 color = White
             )
