@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -39,7 +38,6 @@ import it.ezzie.weathery.dataReturn.CurrentHourIndex
 import it.ezzie.weathery.dataReturn.WeatherCondition
 import it.ezzie.weathery.model.Daily
 import it.ezzie.weathery.model.Hourly
-import it.ezzie.weathery.model.HourlyUnits
 import it.ezzie.weathery.model.WeatherData
 import it.ezzie.weathery.networkAPI.NetworkClient
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
@@ -53,6 +51,7 @@ import it.ezzie.weathery.view.SunriseSunset
 import it.ezzie.weathery.view.TodayDetailUI
 import it.ezzie.weathery.view.WeatherDetail
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -128,11 +127,10 @@ fun HourlyWeatherRow(hourly: Hourly){
             //Formatting Hour (01:00) to (1AM)
             val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
             val formatter = DateTimeFormatter.ofPattern("ha")
-            if(currentHourIndex + index == 24){
-                formattedHour = "Tomorrow"
-            }
-            else{
-                formattedHour = hour.format(formatter).uppercase()
+            formattedHour = if(currentHourIndex + index == 24){
+                "Tomorrow"
+            } else{
+                hour.format(formatter).uppercase()
             }
             //WeatherCode To Icon
             val icon : Int = WeatherCondition().codeToIcon(hourly.weather_code[currentHourIndex + index])
@@ -152,11 +150,11 @@ fun SevenDayWeatherColumn(daily : Daily){
     ){
         daily.time.forEachIndexed { index, timeStamp ->
             val weatherCondition = WeatherCondition()
-            val date = timeStamp
             val weatherIcon = weatherCondition.codeToIcon(daily.weather_code[index])
             val weatherCode = weatherCondition.codeToCondition(daily.weather_code[index])
-            val minTemperature
-            SevenDayWeatherUI(date, weatherIcon, weatherCode)
+            val minTemperature= daily.temperature_2m_min[index]
+            val maxTemperature= daily.temperature_2m_max[index]
+            SevenDayWeatherUI(timeStamp, weatherIcon, weatherCode, minTemperature, maxTemperature)
         }
     }
 }

@@ -38,7 +38,7 @@ class NetworkClient{
         }
     }
 
-    suspend fun getWeatherInfo(latitude : Double, longitude : Double) : WeatherData{
+    suspend fun getWeatherInfo(latitude : Double, longitude : Double) : WeatherData {
         val response : HttpResponse = client.get("https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,is_day,rain,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,uv_index_clear_sky_max&current_weather=true")
         val jsonResponse = response.body<JsonObject>()
         val currentWeather = jsonResponse["current_weather"]!!.jsonObject
@@ -74,7 +74,7 @@ class NetworkClient{
                 windspeed = currentWeatherUnits["windspeed"]!!.jsonPrimitive.content
             ),
             Daily(
-                daylight_duration = daily["daylight_duration"]!!.jsonArray.map{ it.jsonPrimitive.double},
+                apparent_temperature_max = daily["apparent_temperature_max"]!!.jsonArray.map{ it.jsonPrimitive.double},
                 sunrise = daily["sunrise"]!!.jsonArray.map { it.jsonPrimitive.content },
                 sunset = daily["sunset"]!!.jsonArray.map { it.jsonPrimitive.content },
                 sunshine_duration = daily["sunshine_duration"]!!.jsonArray.map{ it.jsonPrimitive.double},
@@ -83,10 +83,12 @@ class NetworkClient{
                 time = daily["time"]!!.jsonArray.map { it.jsonPrimitive.content },
                 uv_index_clear_sky_max = daily["uv_index_clear_sky_max"]!!.jsonArray.map{ it.jsonPrimitive.double},
                 uv_index_max = daily["uv_index_max"]!!.jsonArray.map{ it.jsonPrimitive.double},
-                weather_code = daily["weather_code"]!!.jsonArray.map{ it.jsonPrimitive.int}
+                weather_code = daily["weather_code"]!!.jsonArray.map{ it.jsonPrimitive.int},
+                wind_direction_10m_dominant = daily["wind_direction_10m_dominant"]!!.jsonArray.map { it.jsonPrimitive.int },
+                wind_speed_10m_max = daily["wind_speed_10m_max"]!!.jsonArray.map { it.jsonPrimitive.double }
             ),
             DailyUnits(
-                daylight_duration = dailyUnits["daylight_duration"]!!.jsonPrimitive.content,
+                apparent_temperature_max = dailyUnits["apparent_temperature_max"]!!.jsonPrimitive.content,
                 sunrise = dailyUnits["sunrise"]!!.jsonPrimitive.content,
                 sunset = dailyUnits["sunset"]!!.jsonPrimitive.content,
                 sunshine_duration = dailyUnits["sunshine_duration"]!!.jsonPrimitive.content,
@@ -95,18 +97,26 @@ class NetworkClient{
                 time = dailyUnits["time"]!!.jsonPrimitive.content,
                 uv_index_clear_sky_max = dailyUnits["uv_index_clear_sky_max"]!!.jsonPrimitive.content,
                 uv_index_max = dailyUnits["uv_index_max"]!!.jsonPrimitive.content,
-                weather_code = dailyUnits["weather_code"]!!.jsonPrimitive.content
+                weather_code = dailyUnits["weather_code"]!!.jsonPrimitive.content,
+                wind_direction_10m_dominant = dailyUnits["wind_direction_10m_dominant"]!!.jsonPrimitive.content,
+                wind_speed_10m_max = dailyUnits["wind_speed_10m_max"]!!.jsonPrimitive.content
             ),
             elevation = elevation,
             generationtime_ms = generationtimeMs,
             Hourly(
+                pressure_msl= hourly["pressure_msl"]!!.jsonArray.map { it.jsonPrimitive.double },
+                relative_humidity_2m = hourly["relative_humidity_2m"]!!.jsonArray.map { it.jsonPrimitive.int },
                 temperature_2m = hourly["temperature_2m"]!!.jsonArray.map { it.jsonPrimitive.double },
                 time = hourly["time"]!!.jsonArray.map { it.jsonPrimitive.content },
+                visibility = hourly["visibility"]!!.jsonArray.map { it.jsonPrimitive.double },
                 weather_code = hourly["weather_code"]!!.jsonArray.map{ it.jsonPrimitive.int}
             ),
             HourlyUnits(
+                pressure_msl = hourlyUnits["pressure_msl"]!!.jsonPrimitive.content,
+                relative_humidity_2m = hourlyUnits["relative_humidity_2m"]!!.jsonPrimitive.content,
                 temperature_2m = hourlyUnits["temperature_2m"]!!.jsonPrimitive.content,
                 time = hourlyUnits["time"]!!.jsonPrimitive.content,
+                visibility = hourlyUnits["visibility"]!!.jsonPrimitive.content,
                 weather_code = hourlyUnits["weather_code"]!!.jsonPrimitive.content
             ),
             latitude = latitude,

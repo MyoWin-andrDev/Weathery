@@ -23,9 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
-import it.ezzie.weathery.model.CurrentWeather
-import it.ezzie.weathery.model.Hourly
-import it.ezzie.weathery.model.HourlyUnits
 import it.ezzie.weathery.ui.theme.DarkNavyBlue
 import it.ezzie.weathery.ui.theme.GreyBorder
 import it.ezzie.weathery.ui.theme.Silver

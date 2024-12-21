@@ -1,6 +1,7 @@
 package it.ezzie.weathery.view
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +30,7 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String){
+fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String, minTemperature : Double, maxTemperature : Double){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,8 +58,11 @@ fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String){
             color = White,
             fontFamily = FontFamily(Font(R.font.roboto_medium))
         )
+        fun RoundingValue(temperature : Double) : String{
+            return Math.round(temperature).toString()
+        }
         Text(
-            text = "13\u00B0/23\u00B0",
+            text = "${RoundingValue(minTemperature)}\u00B0/${RoundingValue(maxTemperature)}\u00B0",
             color = White,
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.poppins_medium))
@@ -69,6 +73,14 @@ fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DateToDayOfWeek(date : String) : String {
-    val sevenDays = LocalDate.parse(date)
-    return sevenDays.dayOfWeek.toString().lowercase().capitalize()
+    val sevenDays = LocalDate.parse(date).dayOfWeek
+    val today = LocalDate.now().dayOfWeek
+    Log.d("SevenDays",sevenDays.toString())
+    Log.d("Today",today.toString())
+    return if(sevenDays.equals(today)){
+        "Today"
+    }
+    else{
+        sevenDays.toString().lowercase().capitalize()
+    }
 }
