@@ -1,12 +1,17 @@
 package it.ezzie.weathery.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,37 +25,38 @@ import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.White
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun SevenDayWeatherUI(){
+fun SevenDayWeatherUI(date : String, weatherIcon : Int, weatherCode : String){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, top = 16.dp, bottom = 16.dp, end = 24.dp)
             .background(color = DarkerNavyBlue),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ){
         Text(
-            text = "Sunday",
+            text = DateToDayOfWeek(date),
             fontSize = 16.sp,
             color = White,
             fontFamily = FontFamily(Font(R.font.roboto_medium))
         )
-        Spacer(modifier = Modifier.weight(1.5f))
+
         Image(
-            painter = painterResource(id = R.drawable.storm),
+            painter = painterResource(id = weatherIcon),
             contentDescription = null,
             modifier = Modifier.size(32.dp)
         )
-        Spacer(modifier = Modifier.weight(0.5f))
+
         Text(
-            text = "Storm",
+            text = weatherCode,
             fontSize = 16.sp,
             color = White,
             fontFamily = FontFamily(Font(R.font.roboto_medium))
         )
-        Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "13\u00B0/23\u00B0",
             color = White,
@@ -58,4 +64,11 @@ fun SevenDayWeatherUI(){
             fontFamily = FontFamily(Font(R.font.poppins_medium))
         )
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DateToDayOfWeek(date : String) : String {
+    val sevenDays = LocalDate.parse(date)
+    return sevenDays.dayOfWeek.toString().lowercase().capitalize()
 }

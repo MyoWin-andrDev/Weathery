@@ -51,7 +51,7 @@ fun MainTemperatureUI(temperature : Double, weatherCode : Int){
             painter = painterResource(id = weatherCondition.codeToIcon(weatherCode)),
             contentDescription = null,
             modifier = Modifier
-                     .size(130.dp),
+                     .size(120.dp),
         )
     }
 }

@@ -2,6 +2,7 @@ package it.ezzie.weathery
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.dataReturn.CurrentHourIndex
 import it.ezzie.weathery.dataReturn.WeatherCondition
+import it.ezzie.weathery.model.Daily
 import it.ezzie.weathery.model.Hourly
 import it.ezzie.weathery.model.HourlyUnits
 import it.ezzie.weathery.model.WeatherData
@@ -104,7 +106,7 @@ fun WeatherScreen(){
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 HourlyWeatherRow(data.hourly)
-                SevenDayWeatherUI()
+                SevenDayWeatherColumn(data.daily)
                 WeatherDetail()
                 SunriseSunset()
             }
@@ -123,25 +125,38 @@ fun HourlyWeatherRow(hourly: Hourly){
     ){
         hourly.time.subList(currentHourIndex!!,25).forEachIndexed { index , currentHour ->
             val formattedHour : String?
-            if(currentHourIndex == LocalDateTime.now().hour){
-               formattedHour = "Today"
-            }
-            else if(currentHourIndex + index == 24){
+            //Formatting Hour (01:00) to (1AM)
+            val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
+            val formatter = DateTimeFormatter.ofPattern("ha")
+            if(currentHourIndex + index == 24){
                 formattedHour = "Tomorrow"
             }
-            else {
-                //Formatting Hour (01:00) to (1AM)
-                val hour = LocalTime.parse(hourly.time[currentHourIndex + index].substringAfter("T"))
-                val formatter = DateTimeFormatter.ofPattern("ha")
+            else{
                 formattedHour = hour.format(formatter).uppercase()
             }
-
             //WeatherCode To Icon
             val icon : Int = WeatherCondition().codeToIcon(hourly.weather_code[currentHourIndex + index])
             //Temperature
             val temperature = hourly.temperature_2m[currentHourIndex + index]
             val formattedTemperature = Math.round(temperature).toString() + "\u00B0"
             HourlyWeatherUI(formattedHour, icon, formattedTemperature)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun SevenDayWeatherColumn(daily : Daily){
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        daily.time.forEachIndexed { index, timeStamp ->
+            val weatherCondition = WeatherCondition()
+            val date = timeStamp
+            val weatherIcon = weatherCondition.codeToIcon(daily.weather_code[index])
+            val weatherCode = weatherCondition.codeToCondition(daily.weather_code[index])
+            val minTemperature
+            SevenDayWeatherUI(date, weatherIcon, weatherCode)
         }
     }
 }
