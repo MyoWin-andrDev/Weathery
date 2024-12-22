@@ -1,4 +1,4 @@
-package it.ezzie.weathery.model
+package it.ezzie.weathery.model.weatherData
 
 data class HourlyUnits(
     val pressure_msl: String,

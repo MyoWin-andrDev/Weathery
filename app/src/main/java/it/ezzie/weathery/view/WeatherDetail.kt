@@ -20,11 +20,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ezzie.weathery.R
-import it.ezzie.weathery.model.WeatherData
+import it.ezzie.weathery.model.weatherData.WeatherData
 import it.ezzie.weathery.ui.theme.DarkNavyBlue
 import it.ezzie.weathery.ui.theme.Silver
 import it.ezzie.weathery.ui.theme.White
@@ -92,7 +91,7 @@ fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, w
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = windCompassDirection + " Wind",
+                    text = "$windCompassDirection Wind",
                     fontSize = 14.sp,
                     color = Silver,
                     fontFamily = FontFamily(Font(R.font.lato_regular)),
@@ -102,7 +101,7 @@ fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, w
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text ="${windSpeed} ${weatherData.daily_units.wind_speed_10m_max}",
+                    text ="$windSpeed ${weatherData.daily_units.wind_speed_10m_max}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -144,7 +143,7 @@ fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, w
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "${humidity} ${weatherData.hourly_units.relative_humidity_2m}",
+                    text = "$humidity ${weatherData.hourly_units.relative_humidity_2m}",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = White,
@@ -239,7 +238,7 @@ fun WeatherDetail(apparentTemperature : Double, windCompassDirection : String, w
 
                 ){
                 Image(
-                    painter = painterResource(id = R.drawable.wind),
+                    painter = painterResource(id = R.drawable.air_pressure),
                     contentDescription = null,
                     modifier = Modifier
                         .size(24.dp)

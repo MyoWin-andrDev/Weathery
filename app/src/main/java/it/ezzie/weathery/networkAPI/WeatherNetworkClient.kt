@@ -8,13 +8,13 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
-import it.ezzie.weathery.model.Current
-import it.ezzie.weathery.model.CurrentUnits
-import it.ezzie.weathery.model.Daily
-import it.ezzie.weathery.model.DailyUnits
-import it.ezzie.weathery.model.Hourly
-import it.ezzie.weathery.model.HourlyUnits
-import it.ezzie.weathery.model.WeatherData
+import it.ezzie.weathery.model.weatherData.Current
+import it.ezzie.weathery.model.weatherData.CurrentUnits
+import it.ezzie.weathery.model.weatherData.Daily
+import it.ezzie.weathery.model.weatherData.DailyUnits
+import it.ezzie.weathery.model.weatherData.Hourly
+import it.ezzie.weathery.model.weatherData.HourlyUnits
+import it.ezzie.weathery.model.weatherData.WeatherData
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.double
@@ -24,7 +24,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 
-class NetworkClient{
+class WeatherNetworkClient{
     private val client = HttpClient {
         install(ContentNegotiation){
             json(Json{

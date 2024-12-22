@@ -1,4 +1,4 @@
-package it.ezzie.weathery.model
+package it.ezzie.weathery.model.weatherData
 
 data class CurrentUnits(
     val interval: String,
