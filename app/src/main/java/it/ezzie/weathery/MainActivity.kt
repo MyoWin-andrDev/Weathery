@@ -1,7 +1,9 @@
 package it.ezzie.weathery
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,18 +29,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import it.ezzie.weathery.accessLocation.GetLocation
 import it.ezzie.weathery.dataReturn.CurrentHourIndex
 import it.ezzie.weathery.dataReturn.TimeFormat
 import it.ezzie.weathery.dataReturn.WeatherCondition
+import it.ezzie.weathery.model.geoData.GeoData
 import it.ezzie.weathery.model.weatherData.Daily
 import it.ezzie.weathery.model.weatherData.Hourly
 import it.ezzie.weathery.model.weatherData.WeatherData
+import it.ezzie.weathery.networkAPI.GeoCodingNetworkClient
 import it.ezzie.weathery.networkAPI.WeatherNetworkClient
 import it.ezzie.weathery.ui.theme.DarkerNavyBlue
 import it.ezzie.weathery.ui.theme.WeatheryTheme
@@ -71,16 +77,32 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherScreen(){
+    val context = LocalContext.current
     val weatherNetworkClient = WeatherNetworkClient()
+    val geoCodingNetworkClient = GeoCodingNetworkClient()
     val coroutineScope = rememberCoroutineScope()
     var weatherData by remember {
         mutableStateOf <WeatherData?>(null)
     }
-
+    var geoData by remember {
+        mutableStateOf<GeoData?>(null)
+    }
+    var geoLocation = remember {
+        GetLocation()
+    }
+    geoLocation.initLocationRequest()
+//    val latitude : Double;
+//    val longitude : Double;
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            weatherData = weatherNetworkClient.getWeatherInfo(13.7563,100.5018)
+            geoLocation.initData(context)
+            val (latitude, longitude) = geoLocation.startLocationUpdates(context)
+            Log.d("main", latitude.toString() + longitude.toString())
+            if(latitude != null && longitude != null){
+                geoData = geoCodingNetworkClient.getGeoData(latitude, longitude)
+                weatherData = weatherNetworkClient.getWeatherInfo(latitude, longitude)
+            }
         }
     }
 

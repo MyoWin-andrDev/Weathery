@@ -1,5 +1,6 @@
 package it.ezzie.weathery.networkAPI
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -31,8 +32,8 @@ class GeoCodingNetworkClient {
             level = LogLevel.BODY
         }
     }
-    suspend fun getGeoData() : GeoData{
-        val response : HttpResponse = client.get("https://geocode.maps.co/reverse?lat=13.7563&lon=100.5018&api_key=6767f8d9aab2b771527120pied956bd")
+    suspend fun getGeoData(latitude : Double, longitude : Double) : GeoData{
+        val response : HttpResponse = client.get("https://geocode.maps.co/reverse?lat=$latitude&lon=$longitude&api_key=6767f8d9aab2b771527120pied956bd")
         val jsonResponse = response.body<JsonObject>()
         val address = jsonResponse["address"]!!.jsonPrimitive.jsonObject
         val boundingbox = jsonResponse["boundingbox"]!!.jsonArray.map { it.jsonPrimitive.content }
@@ -43,6 +44,7 @@ class GeoCodingNetworkClient {
         val osm_id = jsonResponse["osm_id"]!!.jsonPrimitive.int
         val osm_type = jsonResponse["osm_type"]!!.jsonPrimitive.content
         val place_id = jsonResponse["place_id"]!!.jsonPrimitive.int
+        Log.d("Json", jsonResponse.toString())
         return GeoData(
             Address(
                 state = address["ISO3166-2-lvl4"]!!.jsonPrimitive.content,
