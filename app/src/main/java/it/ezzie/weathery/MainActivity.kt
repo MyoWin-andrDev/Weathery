@@ -1,9 +1,12 @@
 package it.ezzie.weathery
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.window.SplashScreen
+import android.window.SplashScreenView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -62,6 +65,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
+    var keepSplashScreen = true
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +81,6 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherScreen(){
-    val context = LocalContext.current
     val weatherNetworkClient = WeatherNetworkClient()
     val geoCodingNetworkClient = GeoCodingNetworkClient()
     val coroutineScope = rememberCoroutineScope()
@@ -91,18 +94,15 @@ fun WeatherScreen(){
         GetLocation()
     }
     geoLocation.initLocationRequest()
-//    val latitude : Double;
-//    val longitude : Double;
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            geoLocation.initData(context)
-            val (latitude, longitude) = geoLocation.startLocationUpdates(context)
-            Log.d("main", latitude.toString() + longitude.toString())
-            if(latitude != null && longitude != null){
-                geoData = geoCodingNetworkClient.getGeoData(latitude, longitude)
-                weatherData = weatherNetworkClient.getWeatherInfo(latitude, longitude)
-            }
+//            val (latitude, longitude) = geoLocation.startLocationUpdates(context)
+//            Log.d("main", latitude.toString() + longitude.toString())
+//            if(latitude != null && longitude != null){
+//                geoData = geoCodingNetworkClient.getGeoData(latitude, longitude)
+                weatherData = weatherNetworkClient.getWeatherInfo(13.7563, 100.5018)
+          //  }
         }
     }
 
