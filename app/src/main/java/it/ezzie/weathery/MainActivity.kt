@@ -2,6 +2,7 @@ package it.ezzie.weathery
 
 import android.app.Activity
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -66,13 +67,15 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     var keepSplashScreen = true
+    val latitude = intent.getDoubleExtra("latitude", 0.0)
+    val longitude = intent.getDoubleExtra("longitude", 0.0)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WeatheryTheme {
-                WeatherScreen()
+                WeatherScreen(latitude, longitude)
             }
         }
     }
@@ -80,7 +83,7 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeatherScreen(){
+fun WeatherScreen(latitude : Double, longitude : Double){
     val weatherNetworkClient = WeatherNetworkClient()
     val geoCodingNetworkClient = GeoCodingNetworkClient()
     val coroutineScope = rememberCoroutineScope()
@@ -90,23 +93,23 @@ fun WeatherScreen(){
     var geoData by remember {
         mutableStateOf<GeoData?>(null)
     }
-    var geoLocation = remember {
+    val geoLocation = remember {
         GetLocation()
     }
     geoLocation.initLocationRequest()
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-//            val (latitude, longitude) = geoLocation.startLocationUpdates(context)
-//            Log.d("main", latitude.toString() + longitude.toString())
-//            if(latitude != null && longitude != null){
-//                geoData = geoCodingNetworkClient.getGeoData(latitude, longitude)
+
                 weatherData = weatherNetworkClient.getWeatherInfo(13.7563, 100.5018)
-          //  }
+           // }
         }
     }
 
     weatherData?.let { data ->
+    if(latitude != null) {
+        Log.d("intent", "$latitude & $longitude")
+    }
         //Getting Current Hour
         val hour = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("ha")
@@ -240,7 +243,7 @@ fun SunDetail(daily: Daily){
 @Preview(showBackground = true, showSystemUi = true)
 fun PreviewWeather(){
     WeatheryTheme {
-        WeatherScreen()
+        //WeatherScreen()
     }
 }
 
