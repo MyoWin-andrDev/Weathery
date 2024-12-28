@@ -29,8 +29,16 @@ class GetLocation : Activity() {
     val LOCATION_REQUEST_CODE: Int = 123
     val REQUEST_CHECK_SETTINGS: Int = 124
     lateinit var locationRequest: LocationRequest
-    var latitude: Double? = null
-    var longitude: Double? = null
+    var locationInterface : LocationCallBackInterface? = null
+
+    interface LocationCallBackInterface{
+       fun onLocationReceived(latitude : Double, longitude : Double)
+    }
+    fun setLocationCallBackInterface(callback : LocationCallBackInterface){
+        this.locationInterface = callback
+    }
+//    var latitude: Double? = null
+//    var longitude: Double? = null
 
     fun initLocationRequest() {
         locationRequest = LocationRequest.create().apply {
@@ -92,27 +100,27 @@ class GetLocation : Activity() {
     }
 
     @SuppressLint("MissingPermission")
-    fun startLocationUpdates(context: Context) : Pair<Double?, Double?> {
+    fun startLocationUpdates(context: Context) {
         LocationServices.getFusedLocationProviderClient(context)
             .requestLocationUpdates(locationRequest, object : LocationCallback() {
-                override fun onLocationResult(locationResult : LocationResult) {
+                override fun onLocationResult(locationResult: LocationResult) {
                     super.onLocationResult(locationResult)
                     if (locationResult != null && locationResult.locations.size > 0) {
                         locationResult.let {
                             val index = it.locations.size - 1
-                            latitude = it.locations[index].latitude
-                            longitude = it.locations[index].longitude
+                            val latitude = it.locations[index].latitude
+                            val longitude = it.locations[index].longitude
                             Log.d("Location", "Latitude: $latitude, Longitude: $longitude")
+                            locationInterface?.onLocationReceived(latitude, longitude)
                         }
                     }
                 }
             }, Looper.getMainLooper())
-        return Pair(latitude , longitude)
     }
 
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//Unwanted Code
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //        val context = super.getApplicationContext()
 //        val activity = super.activity
 //        if (requestCode == LOCATION_REQUEST_CODE) {
@@ -126,6 +134,6 @@ class GetLocation : Activity() {
 //                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
 //            }
 //        }
-    }
+//    }
 
 }

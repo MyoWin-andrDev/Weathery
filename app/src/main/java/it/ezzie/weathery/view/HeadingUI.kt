@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HeadingUI() {
+fun HeadingUI(address : String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,7 +53,7 @@ fun HeadingUI() {
                         )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = "BangKok",
+                        text = address,
                         fontSize = 24.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_medium)),
                         color = White
