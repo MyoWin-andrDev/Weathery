@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Weathery" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Weathery" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="windowSplashScreenBackground">@color/darker_navy_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/cloudy</item>
+    </style>
 </resources>

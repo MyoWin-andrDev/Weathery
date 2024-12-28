@@ -74,4 +74,5 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }
